@@ -32,7 +32,7 @@ cd tessera-py && python3 demo.py
 
 ### tessera-rust/
 
-Conformant implementation in Rust. Produces identical `receipt_id` values for identical fields, verified against `spec/TEST-VECTORS.json`. Proves the specification is language-agnostic.
+Conformant implementation in Rust. Produces identical `receipt_id` values for identical fields, verified against `spec/TEST-VECTORS.json`.
 
 ### tessera-network/
 
