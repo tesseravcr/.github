@@ -6,7 +6,7 @@ When an agent computes something, it produces a receipt: a signed data structure
 
 Receipts chain into provenance graphs, settle royalties automatically, and accumulate into an operator's trust history. That history becomes their collateral — the more verified work an operator has done, the less escrow they need for future transactions. Trust is derived from computation, not from deposits.
 
-## Repository Structure
+## Structure
 
 ```
 spec/              Protocol specification — the canonical definition of VCR
