@@ -13,15 +13,9 @@ Weird, right? Every other economic transaction in history has a paper trail. AI 
 
 VCR is a spec for that missing receipt. 21 fields that wrap a cryptographic proof in an economic envelope - what model ran, what went in, what came out, when, and who did it. Any stranger can verify it. Receipts chain into provenance graphs through hash links, so tamper with one and everything downstream breaks. Your history of verified work becomes your reputation. No token, blockchain or middleman.
 
-
-
 I wrote a formal spec, built it in Python and Rust (both produce identical hashes for identical inputs — that's the point), and put together a network POC with agents actually transacting over HTTP.
 
-
-
 Curious whether this resonates with anyone or if I'm solving a problem that doesn't exist yet. Either answer is useful.
-
-
 
 ## Repositories
 
@@ -30,6 +24,10 @@ Curious whether this resonates with anyone or if I'm solving a problem that does
 | [spec](https://github.com/tesseravcr/spec) | The formal spec, whitepaper, and test vectors. Start here. |
 | [tessera-py](https://github.com/tesseravcr/tessera-py) | Reference implementation. Seven modules, ~1500 lines, one dependency. |
 | [tessera-rust](https://github.com/tesseravcr/tessera-rust) | Conformant Rust implementation. Proves the spec is language-agnostic. |
+
+## See it in action
+
+[Interactive demo](https://tesseravcr.github.io) — walks through the full protocol step by step.
 
 ## The proving backend is two functions
 
