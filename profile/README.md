@@ -1,84 +1,34 @@
-# Tessera VCR
+Your agent calls another agent... something comes back. Was it actually Opus 4.6 or did they run 4.0 and pocket the difference? Did the model even run? You have no idea. The response is consumed and gone - no receipt, no proof, no way for anyone else to check what happened.
 
-A protocol for verified computation between autonomous agents.
+Weird, right? Every other economic transaction in history has a paper trail. However, AI compute doesn't.
 
-When an agent computes something, it produces a receipt: a signed data structure that proves what model ran, what went in, what came out, and when. Any other agent can verify that receipt without contacting the original producer. No platform in the middle. No chain to wait on. No token required.
+VCR is a spec for that missing receipt. 21 fields that wrap a cryptographic proof in an economic envelope - what model ran, what went in, what came out, when, and who did it. Any stranger can verify it. Receipts chain into provenance graphs through hash links, so tamper with one and everything downstream breaks. Your history of verified work becomes your reputation. No token, blockchain or middleman.
 
-Receipts chain into provenance graphs, settle royalties automatically, and accumulate into an operator's trust history. That history becomes their collateral — the more verified work an operator has done, the less escrow they need for future transactions. Trust is derived from computation, not from deposits.
+I wrote a formal spec, built it in Python and Rust (both produce identical hashes for identical inputs — that's the point), and put together a network POC with agents actually transacting over HTTP.
 
-## Structure
+Curious whether this resonates with anyone or if I'm solving a problem that doesn't exist yet. Either answer is useful.
 
-```
-spec/              Protocol specification — the canonical definition of VCR
-tessera-py/        Reference implementation in Python
-tessera-rust/      Conformant implementation in Rust
-tessera-network/   Network POC — agents transacting over HTTP
-```
+## Repositories
 
-### spec/
+| Repository | Description |
+|---|---|
+| [spec](https://github.com/tesseravcr/spec) | The formal spec, whitepaper, and test vectors. Start here. |
+| [tessera-py](https://github.com/tesseravcr/tessera-py) | Reference implementation. Seven modules, ~1500 lines, one dependency. |
+| [tessera-rust](https://github.com/tesseravcr/tessera-rust) | Conformant Rust implementation. Proves the spec is language-agnostic. |
 
-The protocol specification. Implementation-agnostic. Contains the formal spec ([VCR-SPEC.md](spec/VCR-SPEC.md)), the whitepaper ([WHITEPAPER.md](spec/WHITEPAPER.md)), and reference test vectors ([TEST-VECTORS.json](spec/TEST-VECTORS.json)).
-
-A developer building a conformant implementation in any language starts here.
-
-### tessera-py/
-
-Reference implementation of the VCR protocol in Python. Seven modules, ~1500 lines, one external dependency (`cryptography`). Includes a demo using real AWS Nitro Enclave attestation, a real ezkl Halo2 ZK proof, and a 25-test protocol validation suite.
+## The proving backend is two functions
 
 ```
-pip install cryptography
-cd tessera-py && python3 demo.py
+prove(artifacts, input_data) -> (proof_bytes, output_data)
+verify(artifacts, proof_bytes) -> bool
 ```
 
-### tessera-rust/
+Everything else is backend-agnostic. ZK proofs, TEE attestation, whatever comes next — the receipt doesn't care.
 
-Conformant implementation in Rust. Produces identical `receipt_id` values for identical fields, verified against `spec/TEST-VECTORS.json`.
+## Where it sits
 
-### tessera-network/
+MCP and APIs solve integration. LangChain and CrewAI solve orchestration. A2A solves discovery. Bittensor and Ritual require a chain and a token.
 
-Network proof of concept. Three agents on separate ports with separate databases communicate only through HTTP. Demonstrates discovery, compute, cold verification, provenance DAG construction, ownership transfer with royalty cascade, and independent chain verification.
-
-```
-cd tessera-network && python3 poc.py
-```
-
-## The Protocol
-
-21 fields. Three things at once:
-
-**A proof of work performed.** Carries the ZK proof or TEE attestation, model ID, and verification key. Any stranger can verify the computation.
-
-**A certificate of provenance.** Links to parent VCRs via cryptographic hash references, forming a DAG. Modify any receipt and all descendants break.
-
-**A transferable economic instrument.** Carries pricing, royalty terms, and transfer history. When a VCR changes hands, royalties flow back through the provenance chain automatically.
-
-## How It Relates to Existing Protocols
-
-**Tool-use protocols** (MCP, APIs) solve integration. They connect agents to endpoints. The response is ephemeral — consumed and gone.
-
-**Agent frameworks** (LangChain, CrewAI, AutoGen) solve orchestration within a single trust boundary.
-
-**Agent communication** (A2A) solves discovery and message passing. It says nothing about whether the agent did what it claimed.
-
-**Blockchain AI** (Bittensor, Ritual) requires a chain, a token, and consensus. They financialise the network itself.
-
-**VCR** sits underneath all of these. It is a verification and trust primitive. No token, no chain, no middleman. The receipt is the economic object. The accumulated receipts are the trust.
-
-## Architecture
-
-```
-Layer 4: Application      Agents, marketplace, network POC
-Layer 3: Protocol          VCR schema, provenance, settlement, stake, royalties
-Layer 2: Ownership         Transparency logs — append-only Merkle trees
-Layer 1: Proving backend   ZK proof or TEE attestation — two functions
-```
-
-The proving backend abstraction is two functions:
-```
-prove(artifacts, input_data) → (proof_bytes, output_data)
-verify(artifacts, proof_bytes) → bool
-```
-
-Everything above this interface is backend-agnostic.
+None of them answer: "did the agent actually do what it claimed?" That's what this is for.
 
 MIT license.
