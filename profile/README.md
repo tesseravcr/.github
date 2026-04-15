@@ -2,7 +2,7 @@ Your agent calls another agent... something comes back.
 
 > Was it actually Opus 4.6 or did they run 4.0 and pocket the difference? Did the model even run? 
 
-You have no idea. 
+You have no idea, nor does it. 
 
 The response is consumed and gone - no receipt, no proof, no way for anyone else to check what happened.
 
