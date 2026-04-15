@@ -7,7 +7,7 @@ You have no idea, nor does it.
 
 The response is consumed and gone - no receipt, no proof, no way for anyone else to check what happened.
 
-Weird, right? Every other economic transaction in history has a paper trail. However, AI compute doesn't.
+Weird, right? Every other economic transaction in history has a paper trail. AI compute doesn't.
 
 ---
 
